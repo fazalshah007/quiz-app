@@ -8,12 +8,12 @@ var loginPassword = document.getElementById("login-password")
 
 
 var firebaseConfig = {
-  apiKey: "AIzaSyC7ku8T7utFnwLHGkdpCicVEmyl7V6qeqQ",
-  authDomain: "quiz-app-005.firebaseapp.com",
-  projectId: "quiz-app-005",
-  storageBucket: "quiz-app-005.firebasestorage.app",
-  messagingSenderId: "635671281783",
-  appId: "1:635671281783:web:0d8a033aac2aabfb270672"
+  apiKey: "",
+  authDomain: "",
+  projectId: "",
+  storageBucket: "",
+  messagingSenderId: "",
+  appId: ""
 };
 
 var app = firebase.initializeApp(firebaseConfig);
