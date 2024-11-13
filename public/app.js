@@ -7,13 +7,23 @@ var loginEmail = document.getElementById("login-email")
 var loginPassword = document.getElementById("login-password")
 
 
-var firebaseConfig = {
-  apiKey: "",
-  authDomain: "",
-  projectId: "",
-  storageBucket: "",
-  messagingSenderId: "",
-  appId: ""
+// var firebaseConfig = {
+//   apiKey: "",
+//   authDomain: "",
+//   projectId: "",
+//   storageBucket: "",
+//   messagingSenderId: "",
+//   appId: ""
+// };
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC7ku8T7utFnwLHGkdpCicVEmyl7V6qeqQ",
+  authDomain: "quiz-app-005.firebaseapp.com",
+  databaseURL: "https://quiz-app-005-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "quiz-app-005",
+  storageBucket: "quiz-app-005.firebasestorage.app",
+  messagingSenderId: "635671281783",
+  appId: "1:635671281783:web:0d8a033aac2aabfb270672"
 };
 
 var app = firebase.initializeApp(firebaseConfig);
@@ -29,7 +39,7 @@ function signUp() {
           .then((userCredential) => {
               // Sign up 
               var user = userCredential.user;
-             
+              localStorage.setItem(signUpEmail.value,`users-${signUpUserName.value}-quiz`)
               window.location.href = "./signin.html"
           })
           .catch((error) => {
@@ -60,7 +70,7 @@ function login(){
   var user = userCredential.user;
 
   
-    
+  document.cookie = "email="+ user.email + "; path=/; max-age="+(60*60*24)  
       window.location.href = "./quiz.html"
 })
 .catch((error) => {
@@ -82,6 +92,21 @@ function login(){
   }
 }
 
+
+
+
+function getCookie(naam){
+  var cookieValue = `; ${document.cookie}`
+  var parts = cookieValue.split(`; ${naam}=`)
+  if(parts.length === 2) {
+      return parts.pop().split(";").shift()
+  }
+  
+}
+
+var userCookie = getCookie("email")
+
+var userid = localStorage.getItem(userCookie)
 
 
 
@@ -160,6 +185,9 @@ var questions = [
   ];
 
 
+
+
+
 var question = document.getElementById("question");
 var option1 = document.getElementById("option1");
 var option2 = document.getElementById("option2");
@@ -191,7 +219,7 @@ function timer(){
   }
 }
 
-
+var startTime = new Date()
 
 
 function nextQuestion(){
@@ -215,6 +243,8 @@ var clearAll = setInterval(timer,1000)
 
       if(getOptions === corrAnswer){
         score++
+
+      
       }
       
       
@@ -227,6 +257,8 @@ var clearAll = setInterval(timer,1000)
 
     if(index > questions.length -1){
 
+  
+
       if(((score/questions.length)*100).toFixed(2) < 40.00){
 
         Swal.fire({
@@ -235,8 +267,33 @@ var clearAll = setInterval(timer,1000)
           icon: "error"
         }).then(function(result){
           if(result.isConfirmed){
-            window.location.reload()
-          
+            
+          var endTime = new Date()
+          var timeTaken = endTime - startTime
+          var minutesTaken = Math.floor(timeTaken/(1000 * 60))
+          var secondsTaken = Math.floor(timeTaken/(1000))
+          var userObj = {
+            message: `Your Score: ${((score/questions.length)*100).toFixed(2)}%`,
+            timeStampsMinutes : minutesTaken,
+            timeStampsSeconds: secondsTaken
+    
+          }
+          firebase.database().ref(userid).push(userObj)
+
+          // firebase.database().ref(userid).on("child_added", function(quiz){
+
+          //   var showQuiz = document.getElementById("socreData")
+
+          //   var pTag = document.createElement("h1")
+          //   var pTagText = document.createTextNode(`${quiz.val().message} and complete time to ${quiz.val().timeStampsMinutes} mintues : ${quiz.val().timeStampsSeconds} seconds`)
+
+          //   pTag.appendChild(pTagText)
+          //   showQuiz.appendChild(pTag)
+          //   console.log(quiz.val());
+            
+          // })
+
+
           }
         })
         
@@ -250,7 +307,31 @@ var clearAll = setInterval(timer,1000)
         icon: "success"
       }).then(function(result){
         if(result.isConfirmed){
-          window.location.reload()
+
+          var endTime = new Date()
+            var timeTaken = endTime - startTime
+            var minutesTaken = Math.floor(timeTaken/(1000 * 60))
+            var secondsTaken = Math.floor(timeTaken/(1000))
+            var userObj = {
+              message: `Your Score: ${((score/questions.length)*100).toFixed(2)}%`,
+              timeStampsMinutes : minutesTaken,
+              timeStampsSeconds: secondsTaken
+      
+            }
+            firebase.database().ref(userid).push(userObj)
+
+            // firebase.database().ref(userid).on("child_added", function(quiz){
+
+            //   var showQuiz = document.getElementById("socreData")
+
+            //   var pTag = document.createElement("h1")
+            //   var pTagText = document.createTextNode(`${quiz.val().message} and complete time to ${quiz.val().timeStampsMinutes} mintues : ${quiz.val().timeStampsSeconds} seconds`)
+
+            //   pTag.appendChild(pTagText)
+            //   showQuiz.appendChild(pTag)
+            //   console.log(quiz.val());
+              
+            // })
         
         }
       })
@@ -284,3 +365,15 @@ function selectRadio(){
     
 }
 
+firebase.database().ref(userid).on("child_added", function(quiz){
+
+  var showQuiz = document.getElementById("socreData")
+
+  var pTag = document.createElement("h1")
+  var pTagText = document.createTextNode(`${quiz.val().message} and complete time to ${quiz.val().timeStampsMinutes} mintues : ${quiz.val().timeStampsSeconds} seconds`)
+
+  pTag.appendChild(pTagText)
+  showQuiz.appendChild(pTag)
+  console.log(quiz.val());
+  
+})

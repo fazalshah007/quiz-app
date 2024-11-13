@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://www.gstatic.com/firebasejs/7.17.2/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.17.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.17.2/firebase-database.js"></script>
    
     <link rel="stylesheet" href="style.css">
     <title>Document</title>
 </head>
 <body onload="nextQuestion()">
-    <div class="w-full h-screen bg-zinc-100 ">
+    <div class="w-full h-screen  ">
         <div class="w-[90%] sm:w-[70%] m-auto py-8 text-center ">
             <h1 class="font-extrabold text-4xl text-zinc-600 mb-16">Quiz App</h1>
 
@@ -68,6 +69,10 @@
                <h1 class="text-end font-semibold text-xl mt-5">Timer <span id="timer" class="font-normal ml-3 inline-block w-10">2:00</span></h1>
             </div>
         </div>
+    </div>
+    <div class="bg-zinc-100 text-xl " id="socreData" style="position: absolute; bottom: 0; left: 10%; text-align: center; margin-top: 40px; margin-bottom: 40px;">
+        <!-- <p>Your score 80.00% complete time 0 min 44 sec</p>
+        <p>Your score 80.00% complete time 0 min 44 sec</p> -->
     </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
